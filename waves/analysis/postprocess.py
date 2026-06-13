@@ -65,7 +65,7 @@ def scan(basefolder):
         print(folder)
         names = folder.split('/')[-1].split('_')
         params['U0'] = float(names[2]+'.'+names[3])
-        params['w0'] = float(names[6].replace('p','.')[1:])
+        params['f0'] = float(names[6].replace('p','.')[1:])
         params['A0'] = float(names[8].replace('m',''))
         
         compute_moments(folder,params=params)
@@ -79,7 +79,7 @@ def compute_moments(folder,params=None):
     filelist = sort_files(filelist)
     pprint(filelist)
 
-    p = get_params(filename)
+    p = get_params(folder)
     if p is not None:
         params=p
     else:
