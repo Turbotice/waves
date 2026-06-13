@@ -60,11 +60,12 @@ def get_params(filename):
 def scan(basefolder):
     folders = glob.glob(basefolder+'*forced*')
     print(folders)
+    params = get_params(basefolder)
     for folder in folders:
         print(folder)
-        compute_moments(folder)
+        compute_moments(folder,params=params)
 
-def compute_moments(folder):
+def compute_moments(folder,params=None):
     if folder is None:
         #use an example folder
         folder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/256_U_0_4_forced/'
@@ -76,7 +77,11 @@ def compute_moments(folder):
     data = {}
     for i,filename in enumerate(filelist):
         d = load_resfile(filename)
-        params = get_params(filename)
+        p = get_params(filename)
+        if p is not None:
+            params=p
+        else:
+            print('no parameter file detected, using generic one')
         d.update(params)
         
         Mx,My = moments.M_xy(d)
