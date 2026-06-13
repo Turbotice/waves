@@ -23,10 +23,18 @@ import waves.analysis.moments as moments
 import waves.tools.rw_data as rw
 
 def sort_files(filelist):
-    times = [int(os.path.basename(filename).split('-')[1].split('.txt')[0]) for filename in filelist]
+    times = []
+    newlist = []
+    for filename in filelist:
+        try:
+            i = int(os.path.basename(filename).split('-')[1].split('.txt')[0])
+            times.append(i)
+            newlist.append(filename)
+        except:
+            print(f'cannot parse name, skip {filename}')
 #    print(times)
     indices = np.argsort(times)
-    filelist = np.asarray(filelist)[indices]
+    filelist = np.asarray(newlist)[indices]
     return filelist
 
 def load_resfile(filename,keys=['x','y','ux','uy','p','f','s']):
