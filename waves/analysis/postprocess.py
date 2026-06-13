@@ -84,7 +84,7 @@ def compute_moments(folder,params=None):
         folder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/256_U_0_4_forced/'
         
     filelist = glob.glob(folder+'/res-*.txt')
-    pprint(filelist)
+    #pprint(filelist)
 
     filelist = sort_files(filelist)
 
@@ -97,6 +97,7 @@ def compute_moments(folder,params=None):
     data = {}
     for i,filename in enumerate(filelist):
         d = load_resfile(filename)
+        print(filename)
 
         d.update(params)
         
