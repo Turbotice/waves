@@ -76,8 +76,9 @@ def compute_moments(folder,params=None):
         folder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/256_U_0_4_forced/'
         
     filelist = glob.glob(folder+'/res*.txt')
-    filelist = sort_files(filelist)
     pprint(filelist)
+
+    filelist = sort_files(filelist)
 
     p = get_params(folder)
     if p is not None:
