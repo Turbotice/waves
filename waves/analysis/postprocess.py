@@ -57,11 +57,12 @@ def get_params(filename):
         print("fileparam is missing, skipping !")
         return None
 
-def scan():
+def scan(basefolder):
     folders = glob.glob(basefolder+'*forced*')
+    print(folders)
     for folder in folders:
         print(folder)
-        #compute_moments(folder)
+        compute_moments(folder)
 
 def compute_moments(folder):
     if folder is None:
@@ -97,6 +98,7 @@ def compute_moments(folder):
 
 def main():
     basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
+    basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
     folders = scan(basefolder)
 
 main()
