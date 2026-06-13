@@ -75,7 +75,7 @@ def compute_moments(folder,params=None):
         #use an example folder
         folder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/256_U_0_4_forced/'
         
-    filelist = glob.glob(folder+'res*.txt')
+    filelist = glob.glob(folder+'/res*.txt')
     filelist = sort_files(filelist)
     pprint(filelist)
 
@@ -104,7 +104,7 @@ def compute_moments(folder,params=None):
                 data[key].append(M[key])
 
     data.update(params)
-    filesave = os.path.dirname(filename)+'/moments.h5'    
+    filesave = os.path.dirname(folder)+'/moments.h5'    
     #filename = filename.split('.txt')[0]+'.h5'
     rw.write_h5(filesave,data)
 
