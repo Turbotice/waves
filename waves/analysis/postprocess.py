@@ -78,7 +78,7 @@ def scan(basefolder):
         
         compute_moments(folder,params=params)
         
-def compute_moments(folder,params=None):
+def compute_moments(folder,params=None,overwrite=False):
     if folder is None:
         #use an example folder
         folder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/256_U_0_4_forced/'
@@ -93,7 +93,11 @@ def compute_moments(folder,params=None):
         params=p
     else:
         print('no parameter file detected, using generic one')
-            
+
+    filesave = folder+'/moments.h5'    
+    if os.path.exists(filesave) and overwrite==False:
+        return None
+
     data = {}
     for i,filename in enumerate(filelist):
         d = load_resfile(filename)
@@ -114,12 +118,11 @@ def compute_moments(folder,params=None):
                 data[key].append(M[key])
 
     data.update(params)
-    filesave = os.path.dirname(folder)+'/moments.h5'    
     #filename = filename.split('.txt')[0]+'.h5'
     rw.write_h5(filesave,data)
 
 def main():
-    basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
+    #basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
     folders = scan(basefolder)
 
