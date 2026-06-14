@@ -11,7 +11,7 @@ Forced jet with free surface, static forcing by u.t
 #include "tag.h"
 
 double U0;
-double omega0;// = 2.*pi; 
+const omega0 = 2.*pi; 
 double A0;// = 0.01;
 
 
@@ -43,8 +43,8 @@ FILE * fpmax; //
 
 int main(int argc,char *argv[]) {
   U0 = atof(argv[1]);
-  omega0 = 2.*pi*atof(argv[2]);
-  A0 = atof(argv[3]);
+  //omega0 = 2.*pi*atof(argv[2]);
+  A0 = atof(argv[2]);
 
 
   t_period=0.05;
