@@ -90,7 +90,7 @@ def retrieve_parameters(folder,file='folder'):
     params['A0'] = float(names[8].replace('m',''))
     return params
 
-def scan(basefolder,test=False):
+def scan(basefolder,test=False,overwrite=False):
     folders = glob.glob(basefolder+'*forced_w0_n*')
     print(folders)
     params = get_params(basefolder)
@@ -105,7 +105,7 @@ def scan(basefolder,test=False):
 
         params.update(retrieve_parameters(folder))
         
-        compute_moments(folder,params=params,test=test)
+        compute_moments(folder,params=params,test=test,overwrite=overwrite)
         
 def compute_moments(folder,params=None,overwrite=False,test=False):
     if folder is None:
@@ -117,7 +117,7 @@ def compute_moments(folder,params=None,overwrite=False,test=False):
 
     filelist = sort_files(filelist)
     if test:
-        nmax = np.min([100,len(filelist)])
+        nmax = np.min([300,len(filelist)])
         filelist = filelist[:nmax]
 
     p = get_params(folder+'/')
@@ -161,7 +161,7 @@ def main():
         basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     else:
         basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
-    folders = scan(basefolder,test=True)
+    folders = scan(basefolder,test=True,overwrite=True)
 
 if __name__ == '__main__':
     main()
