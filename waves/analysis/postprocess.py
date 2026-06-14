@@ -122,6 +122,8 @@ def compute_moments(folder,params=None,overwrite=False,test=False,n=300):
     print(folder)
     p = get_params(folder+'/')
     if p is not None:
+        if params is None:
+            params = {}
         params.update(p)
     else:
         print('no parameter file detected, using generic one')
