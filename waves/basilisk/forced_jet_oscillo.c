@@ -42,9 +42,9 @@ FILE * fpmax; //
 
 
 int main(int argc,char *argv[]) {
-  U0 = argv[1]
-  omega0 = 2.*pi*argv[2]
-  A0 = argv[3]
+  U0 = argv[1];
+  omega0 = 2.*pi*argv[2];
+  A0 = argv[3];
 
 
   t_period=0.05;
