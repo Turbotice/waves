@@ -10,9 +10,9 @@ Forced jet with free surface, static forcing by u.t
 #include "tracer.h"
 #include "tag.h"
 
-double U0;
-double omega0;// = 2.*pi; 
-double A0;// = 0.01;
+const double U0;
+const double omega0;// = 2.*pi; 
+const double A0;// = 0.01;
 
 
 //Paramètres simu.
@@ -63,7 +63,7 @@ int main(int argc,char *argv[]) {
   TOLERANCE = 1e-3 [*];
 
   u.n[bottom] = dirichlet (f[]*U0*(x > -R_d && x <R_d));
-  u.t[bottom] = dirichlet(f[]*A0*U0*sin(omega0*0.5*t)*(x > -R_d && x <R_d));
+  u.t[bottom] = dirichlet(f[]*A0*U0*sin(omega0*t)*(x > -R_d && x <R_d));
 
   u.n[top] = u.n[] > 0. ? neumann(0.) : dirichlet(0.);
   p[top] = dirichlet(0.);
