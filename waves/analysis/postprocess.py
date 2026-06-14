@@ -161,7 +161,7 @@ def main():
         basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     else:
         basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
-    folders = scan(basefolder,test=True,overwrite=True)
+    folders = scan(basefolder,test=True,overwrite=False)
 
 if __name__ == '__main__':
     main()
