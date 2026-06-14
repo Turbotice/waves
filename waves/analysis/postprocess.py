@@ -9,8 +9,9 @@ global osname,ostype
 ostype = platform.platform().split('-')[0]
 osname = socket.gethostname()
 
-
 from pprint import pprint
+
+
 # detect all .txt files to process
 # load each data set
 # compute the averaged quantities
@@ -29,6 +30,21 @@ from pprint import pprint
 
 import waves.analysis.moments as moments
 import waves.tools.rw_data as rw
+
+import argparse
+
+def gen_parser():    
+    parser = argparse.ArgumentParser(description="Postprocess DNS of jet - Surface oscillation ")
+    parser.add_argument('-ow', dest='overwrite', type=bool,default=False,help='overwrite previous .h5 file')
+    parser.add_argument('-folder', dest='folder', type=str,default=None,help='To select a specific folder')
+    parser.add_argument('-n', dest='n', type=int,default=None,help='To select the number of files to process')
+    parser.add_argument('-t', dest='test', type=bool,default=True,help='To process only part of the files')
+
+    #parser.add_argument('-step', dest='step', type=int,default=3,help='select Step to be performed')
+#    print(parser)   
+    args = parser.parse_args()
+    print(args)
+    return args
 
 def sort_files(filelist):
     times = []
@@ -89,25 +105,8 @@ def retrieve_parameters(folder,file='folder'):
     params['f0'] = float(names[6].replace('p','.')[1:])
     params['A0'] = float(names[8].replace('m',''))
     return params
-
-def scan(basefolder,test=False,overwrite=False):
-    folders = glob.glob(basefolder+'*forced_w0_n*')
-    print(folders)
-    params = get_params(basefolder)
-    if params is None:
-        params = {}
         
-    for folder in folders:
-        print(folder)
-        p = get_params(folder+'/')
-        if p is not None:
-            params=p
-
-        params.update(retrieve_parameters(folder))
-        
-        compute_moments(folder,params=params,test=test,overwrite=overwrite)
-        
-def compute_moments(folder,params=None,overwrite=False,test=False):
+def compute_moments(folder,params=None,overwrite=False,test=False,n=300):
     if folder is None:
         #use an example folder
         folder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/256_U_0_4_forced/'
@@ -117,7 +116,7 @@ def compute_moments(folder,params=None,overwrite=False,test=False):
 
     filelist = sort_files(filelist)
     if test:
-        nmax = np.min([300,len(filelist)])
+        nmax = np.min([n,len(filelist)])
         filelist = filelist[:nmax]
 
     p = get_params(folder+'/')
@@ -156,12 +155,32 @@ def compute_moments(folder,params=None,overwrite=False,test=False):
     #filename = filename.split('.txt')[0]+'.h5'
     rw.write_h5(filesave,data)
 
-def main():
+def scan(basefolder,test=False,overwrite=False,n=300):
+    folders = glob.glob(basefolder+'*forced_w0_n*')
+    print(folders)
+    params = get_params(basefolder)
+    if params is None:
+        params = {}
+        
+    for folder in folders:
+        print(folder)
+        p = get_params(folder+'/')
+        if p is not None:
+            params=p
+
+        params.update(retrieve_parameters(folder))
+        compute_moments(folder,params=params,test=test,overwrite=overwrite,n=n)
+        
+def main(args):
     if 'macOS' in ostype:
         basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     else:
         basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
-    folders = scan(basefolder,test=True,overwrite=False)
+    if args.folder is not None:
+        compute_moments(args.folder,params=None,overwrite=args.overwrite,test=args.test,n=args.n)
+    else:
+        folders = scan(basefolder,test=args.test,overwrite=args.overwrite,n=args.n)
 
 if __name__ == '__main__':
-    main()
+    args = gen_parser()
+    main(args)
