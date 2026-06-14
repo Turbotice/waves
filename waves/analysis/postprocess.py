@@ -39,7 +39,11 @@ def sort_files(filelist):
 
 def load_resfile(filename,keys=['x','y','ux','uy','p','f','s']):
     #default keys values
-    data = np.asarray(rw.read_csv(filename,delimiter=' '))[:,:-1].astype(float)
+    try:
+        data = np.asarray(rw.read_csv(filename,delimiter=' '))[:,:-1].astype(float)
+    except:
+        print(f'Cannot read {filename}, skip')
+        return None
     ns,nd = data.shape
     nx = 2**int(np.log2(ns)/2)
     ny = nx
@@ -53,6 +57,7 @@ def load_resfile(filename,keys=['x','y','ux','uy','p','f','s']):
 
 def get_params(filename):
     folder = os.path.dirname(filename)
+    print(folder)
     fileparam = folder+'/params.txt'
     if os.path.exists(fileparam):
         raw = rw.read_csv(fileparam,delimiter='\t')
@@ -69,8 +74,12 @@ def scan(basefolder):
     folders = glob.glob(basefolder+'*forced_w0_n*')
     print(folders)
     params = get_params(basefolder)
+
     for folder in folders:
         print(folder)
+        p = get_params(folder+'/')
+        if p is not None:
+            params=p
         names = folder.split('/')[-1].split('_')
         params['U0'] = float(names[2]+'.'+names[3])
         params['f0'] = float(names[6].replace('p','.')[1:])
@@ -88,7 +97,7 @@ def compute_moments(folder,params=None,overwrite=False):
 
     filelist = sort_files(filelist)
 
-    p = get_params(folder)
+    p = get_params(folder+'/')
     if p is not None:
         params=p
     else:
@@ -101,8 +110,10 @@ def compute_moments(folder,params=None,overwrite=False):
     data = {}
     for i,filename in enumerate(filelist):
         d = load_resfile(filename)
+        if d is None:
+            continue
+        
         print(filename)
-
         d.update(params)
         
         Mx,My = moments.M_xy(d)

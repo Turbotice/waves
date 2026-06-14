@@ -19,7 +19,7 @@ def variables(Mx,My,Mf=None):
         
     return M
 
-def moment_u(x,u,param):
+def moment_u(x,u,param,axis=0):
     [nx,ny] = u.shape
     
     imin = int(np.round(nx/4))
@@ -31,14 +31,22 @@ def moment_u(x,u,param):
 
     M={}
     for n in range(3):
-        M[n]= np.sum(x**n*Z,axis=0)
+        M[n]= np.sum(x**n*Z,axis=axis)
     return M
+
+
+def moment_f(y,f,param,axis=1):
+    M={}
+    for n in range(3):
+        M[n]= np.sum(y**n*f,axis=axis)
+    return M
+
                 
 def M_xy(d):
-    Mx = moment_u(d['x'],d['ux'],d)
-    My = moment_u(d['x'],d['uy'],d)
+    Mx = moment_u(d['x'],d['ux'],d,axis=0)
+    My = moment_u(d['x'],d['uy'],d,axis=0)
     return Mx,My
 
 def M_f(d):
-    Mf = moment_u(d['y'],d['f'],d)
+    Mf = moment_f(d['y'],d['f'],d,axis=1)
     return Mf
