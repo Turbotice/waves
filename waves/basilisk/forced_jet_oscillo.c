@@ -41,10 +41,10 @@ scalar * tracers = {s};
 FILE * fpmax; //
 
 
-int main(int argc,char *argv[]) {
-  U0 = atof(*argv[1]);
-  //omega0 = 2.*pi*atof(*argv[2]);
-  A0 = atof(*argv[2]);
+int main(int argc,double *argv[]) {
+  U0 = argv[1];
+  omega0 = 2.*pi*argv[2];
+  A0 = argv[3];
 
 
   t_period=0.05;
@@ -63,7 +63,7 @@ int main(int argc,char *argv[]) {
   TOLERANCE = 1e-3 [*];
 
   u.n[bottom] = dirichlet (f[]*U0*(x > -R_d && x <R_d));
-  u.t[bottom] = dirichlet(f[]*A0*U0*sin(omega0*t)*(x > -R_d && x <R_d));
+  u.t[bottom] = dirichlet(f[]*A0*U0*sin(2.*pi*omega0*t)*(x > -R_d && x <R_d));
 
   u.n[top] = u.n[] > 0. ? neumann(0.) : dirichlet(0.);
   p[top] = dirichlet(0.);
