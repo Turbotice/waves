@@ -117,7 +117,7 @@ def compute_moments(folder,params=None,overwrite=False,test=False):
 
     filelist = sort_files(filelist)
     if test:
-        nmax = np.min(100,len(filelist))
+        nmax = np.min([100,len(filelist)])
         filelist = filelist[:nmax]
 
     p = get_params(folder+'/')
