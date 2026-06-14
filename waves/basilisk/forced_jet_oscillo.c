@@ -10,9 +10,9 @@ Forced jet with free surface, static forcing by u.t
 #include "tracer.h"
 #include "tag.h"
 
-const double U0;
-const double omega0;// = 2.*pi; 
-const double A0;// = 0.01;
+double U0;
+double omega0;// = 2.*pi; 
+double A0;// = 0.01;
 
 
 //Paramètres simu.
