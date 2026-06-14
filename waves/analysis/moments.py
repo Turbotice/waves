@@ -11,8 +11,8 @@ def variables(Mx,My,Mf=None):
     M={}
     #print(Mx[1])
     M['Q_x'] = Mx[0]
-    M['zeta'] = Mx[1]/Mx[0]
-    M['sigma_z'] = Mx[2]/Mx[0]-M['zeta']**2#check !!!
+    M['zeta'] = Mx[1]#/Mx[0]
+    M['sigma_z'] = Mx[2]#/Mx[0]-M['zeta']**2#check !!!
     
     if Mf is not None:
         M['eta'] = Mf[0]
@@ -39,6 +39,7 @@ def moment_f(y,f,param,axis=1):
     M={}
     for n in range(3):
         M[n]= np.sum(y**n*f,axis=axis)
+    #print(M[0])
     return M
 
                 

@@ -2,6 +2,14 @@ import numpy as np
 import glob
 import os
 
+import platform
+import socket
+
+global osname,ostype
+ostype = platform.platform().split('-')[0]
+osname = socket.gethostname()
+
+
 from pprint import pprint
 # detect all .txt files to process
 # load each data set
@@ -70,20 +78,32 @@ def get_params(filename):
         print("fileparam is missing, skipping !")
         return None
 
+def retrieve_parameters(folder,file='folder'):
+    if file=='folder':
+        names = folder.split('/')[-1].split('_')
+    else:
+        names = os.path.basename(folder).split('_')
+
+    params = {}
+    params['U0'] = float(names[2]+'.'+names[3])
+    params['f0'] = float(names[6].replace('p','.')[1:])
+    params['A0'] = float(names[8].replace('m',''))
+    return params
+
 def scan(basefolder):
     folders = glob.glob(basefolder+'*forced_w0_n*')
     print(folders)
     params = get_params(basefolder)
-
+    if params is None:
+        params = {}
+        
     for folder in folders:
         print(folder)
         p = get_params(folder+'/')
         if p is not None:
             params=p
-        names = folder.split('/')[-1].split('_')
-        params['U0'] = float(names[2]+'.'+names[3])
-        params['f0'] = float(names[6].replace('p','.')[1:])
-        params['A0'] = float(names[8].replace('m',''))
+
+        params.update(retrieve_parameters(folder))
         
         compute_moments(folder,params=params)
         
@@ -99,7 +119,7 @@ def compute_moments(folder,params=None,overwrite=False):
 
     p = get_params(folder+'/')
     if p is not None:
-        params=p
+        params.update(p)
     else:
         print('no parameter file detected, using generic one')
 
@@ -122,6 +142,7 @@ def compute_moments(folder,params=None,overwrite=False):
         #M.update(params)
         #d.update(M)
 
+        #print(M['eta'])
         for key in M.keys():
             if i==0:
                 data[key]=[M[key]]
@@ -133,8 +154,11 @@ def compute_moments(folder,params=None,overwrite=False):
     rw.write_h5(filesave,data)
 
 def main():
-    #basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
-    basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
+    if 'macOS' in ostype:
+        basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
+    else:
+        basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
     folders = scan(basefolder)
 
-main()
+if __name__ == '__main__':
+    main()
