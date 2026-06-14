@@ -11,7 +11,7 @@ Forced jet with free surface, static forcing by u.t
 #include "tag.h"
 
 double U0;
-const omega0 = 2.*pi; 
+const double omega0 = 2.*pi; 
 double A0;// = 0.01;
 
 
