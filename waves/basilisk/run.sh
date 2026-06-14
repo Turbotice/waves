@@ -1,11 +1,7 @@
 #!/bin/bash
 
-Bo=0.2649183
-Oh=0.1616947
-OMEGA=1
-GAMMA=1
-phase=0
-LEVEL=8
-Nperiod=512
+U0 = 0.4
+freq = 1.A0 = 0.05
 
-./bounce_coherent $Bo $Oh $OMEGA $GAMMA $phase $LEVEL $Nperiod
+
+./forced_jet_oscillo.c $U0 $freq $A0

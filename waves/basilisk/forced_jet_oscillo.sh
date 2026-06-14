@@ -10,12 +10,13 @@ Forced jet with free surface, static forcing by u.t
 #include "tracer.h"
 #include "tag.h"
 
-const double omega0 = 2.*pi; 
-const double A0 = 0.01;
+double U0;
+double omega0;// = 2.*pi; 
+double A0;// = 0.01;
+
 
 //Paramètres simu.
 double h;
-double U0;
 double R_d;
 
 //Sauvegarde paramètres adim. et autres
@@ -39,7 +40,12 @@ scalar * tracers = {s};
 
 FILE * fpmax; //
 
-int main() {
+
+int main(int argc,char *argv[]) {
+  U0 = argv[1]
+  omega0 = 2.*pi*argv[2]
+  A0 = argv[3]
+
 
   t_period=0.05;
   t_max=100;
@@ -50,14 +56,14 @@ int main() {
   rho1=1000;
   mu1 = 0.1;
   mu2 = 0.01*mu1;
-  U0=0.4;
+
   h=0.15;
   grav=9.81;
 
   TOLERANCE = 1e-3 [*];
 
   u.n[bottom] = dirichlet (f[]*U0*(x > -R_d && x <R_d));
-  u.t[bottom] = dirichlet(f[]*0.1*U0*sin(omega0*0.5*t)*(x > -R_d && x <R_d));
+  u.t[bottom] = dirichlet(f[]*A0*U0*sin(omega0*0.5*t)*(x > -R_d && x <R_d));
 
   u.n[top] = u.n[] > 0. ? neumann(0.) : dirichlet(0.);
   p[top] = dirichlet(0.);
