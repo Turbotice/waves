@@ -37,7 +37,7 @@ def gen_parser():
     parser = argparse.ArgumentParser(description="Postprocess DNS of jet - Surface oscillation ")
     parser.add_argument('-ow', dest='overwrite', type=bool,default=False,help='overwrite previous .h5 file')
     parser.add_argument('-folder', dest='folder', type=str,default=None,help='To select a specific folder')
-    parser.add_argument('-n', dest='n', type=int,default=None,help='To select the number of files to process')
+    parser.add_argument('-n', dest='n', type=int,default=100,help='To select the number of files to process')
     parser.add_argument('-t', dest='test', type=bool,default=True,help='To process only part of the files')
 
     #parser.add_argument('-step', dest='step', type=int,default=3,help='select Step to be performed')
@@ -178,7 +178,7 @@ def main(args):
     if 'macOS' in ostype:
         basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     else:
-        basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'
+        basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/test/'
     if args.folder is not None:
         compute_moments(args.folder,params=None,overwrite=args.overwrite,test=args.test,n=args.n)
     else:
