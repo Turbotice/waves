@@ -3,15 +3,34 @@ import os
 import glob
 from pprint import pprint
 
-folder = '/media/turbots/DATA1/Jet_Surface/Basilisk/Forced/'#outputs/'
+#base folder
+global basefolder
+basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/'#outputs/'
 
-filelist = glob.glob(folder+'*/moments.h5')
-pprint(filelist)
+def gen_parser():    
+    parser = argparse.ArgumentParser(description="Compile .h5 files in one folder")
+    parser.add_argument('-ow', dest='overwrite', type=bool,default=True,help='overwrite previous .h5 file')
+    parser.add_argument('-f', dest='folder', type=str,default="",help='To target a specific folder')
 
-datafolder = folder + 'outputs'
-if not os.path.exists(datafolder):
-    os.makedirs(datafolder)
+    #parser.add_argument('-step', dest='step', type=int,default=3,help='select Step to be performed')
+#    print(parser)   
+    args = parser.parse_args()
+    print(args)
+    return args
 
-for filename in filelist:
-    newname = filename.split('/')[-2]+'_'+os.path.basename(filename)
-    subprocess.run(['cp',filename,f"{datafolder}/{newname}"])
+def main(f):
+    folder = basefolder+f
+    filelist = glob.glob(folder+'/*/moments.h5')
+    pprint(filelist)
+
+    datafolder = folder + '/outputs'
+    if not os.path.exists(datafolder):
+        os.makedirs(datafolder)
+
+    for filename in filelist:
+        newname = f+'_'+filename.split('/')[-2]+'_'+os.path.basename(filename)
+        subprocess.run(['cp',filename,f"{datafolder}/{newname}"])
+
+if __name__ == '__main__':
+    args = gen_parser()
+    main(args.folder)
