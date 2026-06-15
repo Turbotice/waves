@@ -36,7 +36,8 @@ import argparse
 def gen_parser():    
     parser = argparse.ArgumentParser(description="Postprocess DNS of jet - Surface oscillation ")
     parser.add_argument('-ow', dest='overwrite', type=bool,default=False,help='overwrite previous .h5 file')
-    parser.add_argument('-folder', dest='folder', type=str,default=None,help='To select a specific folder')
+    parser.add_argument('-f', dest='folder', type=str,default="test",help='To select a subfolder')
+    parser.add_argument('-folder', dest='singlefolder', type=str,default=None,help='To select a single folder')    
     parser.add_argument('-n', dest='n', type=int,default=100,help='To select the number of files to process')
     parser.add_argument('-t', dest='test', type=bool,default=True,help='To process only part of the files')
 
@@ -94,16 +95,24 @@ def get_params(filename):
         print("fileparam is missing, skipping !")
         return None
 
-def retrieve_parameters(folder,file='folder'):
+def retrieve_parameters(folder,file='folder',shift=0):
     if file=='folder':
         names = folder.split('/')[-1].split('_')
     else:
         names = os.path.basename(folder).split('_')
 
     params = {}
-    params['U0'] = float(names[2]+'.'+names[3])
-    params['f0'] = float(names[6].replace('p','.')[1:])
-    params['A0'] = float(names[8].replace('m',''))
+    params['U0'] = float(names[2+shift]+'.'+names[3+shift])
+    
+    if shift==0:
+        params['f0'] = float(names[6+shift].replace('p','.')[1:])
+        params['A0'] = float(names[8+shift].replace('m',''))
+    elif shift==1:
+        params['f0'] = float(names[6+shift][1:]+'.'+names[7+shift])
+        params['A0'] = float(names[9+shift].replace('m',''))
+        #float(names[6+shift].replace('p','.')[1:])
+    else:
+        print('Not defined')
     return params
         
 def compute_moments(folder,params=None,overwrite=False,test=False,n=300):
@@ -178,8 +187,8 @@ def main(args):
     if 'macOS' in ostype:
         basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     else:
-        basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/test/'
-    if args.folder is not None:
+        basefolder = f'/media/turbots/DATA1/Jet_Surface/Basilisk/{args.folder}/'
+    if args.singlefolder is not None:
         compute_moments(args.folder,params=None,overwrite=args.overwrite,test=args.test,n=args.n)
     else:
         folders = scan(basefolder,test=args.test,overwrite=args.overwrite,n=args.n)
