@@ -2,7 +2,7 @@ import subprocess
 import os
 import glob
 from pprint import pprint
-
+import argparse
 #base folder
 global basefolder
 basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/'#outputs/'
