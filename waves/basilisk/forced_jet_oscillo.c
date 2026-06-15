@@ -12,7 +12,7 @@ Forced jet with free surface, static forcing by u.t
 
 // arguments 
 double U0;
-double omega0;
+double omega0 [0,-1];
 double A0;
 //Paramètres simu.
 double h;
@@ -42,7 +42,7 @@ FILE * fpmax; //
 
 int main(int argc,char * argv[]) {
   double U0 = atof(argv[1]);
-  double omega0 = 2.*pi*1.287**atof(argv[2]) [0,-1];
+  double omega0 = 2.*pi*1.287**atof(argv[2]);
   double A0 = atof(argv[3]);
 
   t_period=0.05;
