@@ -28,7 +28,8 @@ def main(f):
         os.makedirs(datafolder)
 
     for filename in filelist:
-        newname = f+'_'+filename.split('/')[-2]+'_'+os.path.basename(filename)
+        newfolder = f+'_'+filename.split('/')[-2]+'_'
+        newname = newfolder.replace('.','_') + os.path.basename(filename)
         subprocess.run(['cp',filename,f"{datafolder}/{newname}"])
 
 if __name__ == '__main__':
