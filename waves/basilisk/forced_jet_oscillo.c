@@ -41,11 +41,10 @@ scalar * tracers = {s};
 FILE * fpmax; //
 
 
-int main(int argc,char *argv[]) {
+int main(int argc,char *a rgv[]) {
   U0 = atof(argv[1]);
   omega0 = 2.*pi*atof(argv[2]);
   A0 = atof(argv[3]);
-
 
   t_period=0.05;
   t_max=100;
