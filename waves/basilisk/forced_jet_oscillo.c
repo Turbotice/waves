@@ -10,6 +10,10 @@ Forced jet with free surface, static forcing by u.t
 #include "tracer.h"
 #include "tag.h"
 
+// arguments 
+double U0;
+double omega0;
+double A0;
 //Paramètres simu.
 double h;
 double R_d;
