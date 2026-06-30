@@ -1,5 +1,11 @@
 Par ex, ici chaque simulation ./bounce est lancé indépendamment et en parallèle, chacun sur 1 coeur.
 
+Compiler un code basilisk :
+qcc forced_jet_oscillo.c -lm
+
+executer :
+nohup ./a.out &
+
 Le fichier 'maître' est le fichier bash loop-simu.sh, qui
 1. crée un dossier par simu
 2. met tout ce qu'il faut dedans (exécutable, fichier run.sh de paramètres ...).
