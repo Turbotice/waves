@@ -148,7 +148,8 @@ def compute_moments(folder,params=None,overwrite=False,test=False,n=300):
             continue
         
         print(filename)
-        d.update(params)
+        if params is not None:
+            d.update(params)
         
         Mx,My = moments.M_xy(d)
         Mf = moments.M_f(d)
@@ -163,7 +164,8 @@ def compute_moments(folder,params=None,overwrite=False,test=False,n=300):
             else:
                 data[key].append(M[key])
 
-    data.update(params)
+    if params is not None:
+        data.update(params)
     #filename = filename.split('.txt')[0]+'.h5'
     rw.write_h5(filesave,data)
 
@@ -187,9 +189,9 @@ def main(args):
     if 'macOS' in ostype:
         basefolder = '/Users/stephane/Documents/git/Notebooks/Jet_Surface/Data/'
     else:
-        basefolder = f'/media/turbots/DATA1/Jet_Surface/Basilisk/{args.folder}/'
+        basefolder = f'/media/turbots/Elements/ThermalPlume/{args.folder}/'
     if args.singlefolder is not None:
-        compute_moments(args.folder,params=None,overwrite=args.overwrite,test=args.test,n=args.n)
+        compute_moments(args.singlefolder,params=None,overwrite=args.overwrite,test=args.test,n=args.n)
     else:
         folders = scan(basefolder,test=args.test,overwrite=args.overwrite,n=args.n)
 

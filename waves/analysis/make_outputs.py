@@ -5,7 +5,7 @@ from pprint import pprint
 import argparse
 #base folder
 global basefolder
-basefolder = '/media/turbots/DATA1/Jet_Surface/Basilisk/'#outputs/'
+basefolder = '/media/turbots/Elements/ThermalPlume/'#outputs/'
 
 def gen_parser():    
     parser = argparse.ArgumentParser(description="Compile .h5 files in one folder")
