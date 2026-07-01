@@ -7,7 +7,7 @@
 #include "two-phase.h" 
 #include "tension.h"
 #include "navier-stokes/conserving.h"
-#include "vtknew.h" //permets de générer des vtk pour visualiser les champs avec paraview
+//#include "vtknew.h" //permets de générer des vtk pour visualiser les champs avec paraview
 #include "tracer.h"
 #include "tag.h"
 
