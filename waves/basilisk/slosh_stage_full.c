@@ -41,7 +41,7 @@ int main(int argc,char * argv[]) {
   
   t_period=0.05;
 
-  U_0 = atof(argv[1]);
+  U0 = atof(argv[1]);
   t_max= atof(argv[2]);
 
   R_d=0.003; 
