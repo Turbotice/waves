@@ -37,10 +37,12 @@ scalar * tracers = {s};
 
 FILE * fpmax; //
 
-int main() {
-
+int main(int argc,char * argv[]) {
+  
   t_period=0.05;
-  t_max=600;
+
+  U_0 = atof(argv[1]);
+  t_max= atof(argv[2]);
 
   R_d=0.003; 
   L0=0.4; 
@@ -48,9 +50,7 @@ int main() {
   rho1=1000;
   mu1 = 0.1;
   mu2 = 0.01*mu1;
-  
-  U0=0.775;
-  
+    
   h=0.15;
   grav=9.81;
 
@@ -139,7 +139,7 @@ We save interfaces for complex orthogonal decomposition (to find the sloshing mo
 */
 
 int isave1 = 1;
-event res_save (t += 0.05; t <= 600) //tout les "t+=...", il générère un vtk avec tout les champs. Le calcul s'arrête à "t<=..."
+event res_save (t += 0.05; t <= t_max) //tout les "t+=...", il générère un vtk avec tout les champs. Le calcul s'arrête à "t<=..."
 {
   char name[80];
   
@@ -160,7 +160,7 @@ event res_save (t += 0.05; t <= 600) //tout les "t+=...", il générère un vtk 
 /**
 To visualize both the surface and the jet, we can follow lagrangian trajectories using a passive tracer. We generate videos:
 */
-event ppm_output (t = 0; t += 0.05; t <= 600){
+event ppm_output (t = 0; t += 0.05; t <= t_max){
   char name[80];
   sprintf (name, "f.mp4");
   output_ppm (f, file = name, n = 512, min = 0, max = 1, linear = true);
@@ -198,7 +198,7 @@ event movies (t += 0.1; t <= 80) //tout les "t+=...", il générère un vtk avec
 
 double t_prev_dump = 0.;
 
-event dump_state (t = 0; t += 10; t <= 600) //t_max
+event dump_state (t = 0; t += 10; t <= t_max) //t_max
 { 
   dump("restart");
   t_prev_dump = t;
