@@ -1,5 +1,5 @@
 /**
-Forced jet with free surface, static forcing by u.t
+# Self-Induced Sloshing by a Jet
 */
 
 #include "grid/multigrid.h"
@@ -7,15 +7,13 @@ Forced jet with free surface, static forcing by u.t
 #include "two-phase.h" 
 #include "tension.h"
 #include "navier-stokes/conserving.h"
+#include "vtknew.h" //permets de générer des vtk pour visualiser les champs avec paraview
 #include "tracer.h"
 #include "tag.h"
 
-// arguments 
-double U0;
-double omega0;
-double A0;
 //Paramètres simu.
 double h;
+double U0;
 double R_d;
 
 //Sauvegarde paramètres adim. et autres
@@ -39,14 +37,10 @@ scalar * tracers = {s};
 
 FILE * fpmax; //
 
-
-int main(int argc,char * argv[]) {
-  U0 = atof(argv[1]);
-  omega0 = 2.*pi*1.287*atof(argv[2]);
-  A0 = atof(argv[3]);
+int main() {
 
   t_period=0.05;
-  t_max=100;
+  t_max=600;
 
   R_d=0.003; 
   L0=0.4; 
@@ -54,14 +48,16 @@ int main(int argc,char * argv[]) {
   rho1=1000;
   mu1 = 0.1;
   mu2 = 0.01*mu1;
-
+  
+  U0=0.775;
+  
   h=0.15;
   grav=9.81;
 
   TOLERANCE = 1e-3 [*];
 
   u.n[bottom] = dirichlet (f[]*U0*(x > -R_d && x <R_d));
-  u.t[bottom] = dirichlet(f[]*A0*U0*sin(omega0*t)*(x > -R_d && x <R_d));
+  u.t[bottom] = dirichlet(0.);
 
   u.n[top] = u.n[] > 0. ? neumann(0.) : dirichlet(0.);
   p[top] = dirichlet(0.);
@@ -72,7 +68,7 @@ int main(int argc,char * argv[]) {
   u.t[left] = y < R_d ? neumann(0.) : dirichlet(0.);
   u.t[right] = y < R_d ? neumann(0.) : dirichlet(0.);
  
-  N=256;
+  N=512;
   origin (-L0/2, 0);
   init_grid(N);
   
@@ -143,7 +139,7 @@ We save interfaces for complex orthogonal decomposition (to find the sloshing mo
 */
 
 int isave1 = 1;
-event res_save (t += 0.05; t <= 100) //tout les "t+=...", il générère un vtk avec tout les champs. Le calcul s'arrête à "t<=..."
+event res_save (t += 0.05; t <= 600) //tout les "t+=...", il générère un vtk avec tout les champs. Le calcul s'arrête à "t<=..."
 {
   char name[80];
   
@@ -155,7 +151,7 @@ event res_save (t += 0.05; t <= 100) //tout les "t+=...", il générère un vtk 
    sprintf (name, "res-%d.txt", isave1);
   FILE * fpres = fopen(name, "w");
   foreach()
-    fprintf (fpres, "%g %g %g %g %g %g %g \n", x, y, u.x[], u.y[], p[],f[],s[]);
+    fprintf (fpres, "%g %g %g %g %g \n", x, y, u.x[], u.y[], p[]); //f[],s[]);
   fclose(fpfacet);
   
   isave1++;
@@ -164,7 +160,7 @@ event res_save (t += 0.05; t <= 100) //tout les "t+=...", il générère un vtk 
 /**
 To visualize both the surface and the jet, we can follow lagrangian trajectories using a passive tracer. We generate videos:
 */
-event ppm_output (t = 0; t += 0.05; t <= 100){
+event ppm_output (t = 0; t += 0.05; t <= 600){
   char name[80];
   sprintf (name, "f.mp4");
   output_ppm (f, file = name, n = 512, min = 0, max = 1, linear = true);
@@ -177,20 +173,32 @@ event ppm_output (t = 0; t += 0.05; t <= 100){
   sprintf (name1, "uY.mp4");
   output_ppm (u.y, file = name1, n = 512, min = -U0, max = +U0, linear = true);
 
+  // optionally tracer
   char name2[80];
   sprintf (name2, "s.mp4");
   output_ppm (s, file = name2, n = 512, min = 0., max = U0, linear = true);
-
-  /*
-  char name3[80];
-  sprintf (name3, "p.mp4");
-  output_ppm (p, file = name3, n = 512, linear = true);
-  */
 }
+
+/*
+int ivtk2 = 1;
+event movies (t += 0.1; t <= 80) //tout les "t+=...", il générère un vtk avec tout les champs. Le calcul s'arrête à "t<=..."
+{
+  scalar omega[];
+  vorticity (u, omega);
+
+  char name[80];
+  sprintf (name, "snapshot-%d.vtk", ivtk2);
+  FILE * fpvtk = fopen(name, "w");
+  output_vtk ({omega,u.x,u.y,p,f,s}, fpvtk);
+  fclose(fpvtk);
+
+  ivtk2++;
+}
+*/
 
 double t_prev_dump = 0.;
 
-event dump_state (t = 0; t +=10; t <= 100) //t_max
+event dump_state (t = 0; t += 10; t <= 600) //t_max
 { 
   dump("restart");
   t_prev_dump = t;
@@ -207,4 +215,3 @@ event dump_state (t = 0; t +=10; t <= 100) //t_max
 event profile (t = end) {
   printf ("-----END-----\n");
 }
-
